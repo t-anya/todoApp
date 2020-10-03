@@ -1,21 +1,21 @@
 package com.example.todo.fragments.add
 
 import android.os.Bundle
-import android.text.TextUtils
 import android.view.*
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.todo.R
-import com.example.todo.data.model.Priority
 import com.example.todo.data.model.ToDoData
 import com.example.todo.data.viewmodel.ToDoViewModel
+import com.example.todo.data.viewmodel.SharedVM
 import kotlinx.android.synthetic.main.fragment_add.*
 
 class addFragment : Fragment() {
 
     private val mToDoViewModel: ToDoViewModel by viewModels()
+    private val sharedViewModel: SharedVM by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -43,10 +43,10 @@ class addFragment : Fragment() {
         val mPriority = spinnerPriority.selectedItem.toString()
         val mDescription = etDescription.text.toString()
 
-        val validation = verifyDataFromUser(mTitle,mDescription)
+        val validation = sharedViewModel.verifyDataFromUser(mTitle,mDescription)
 
         if(validation){
-            val newData = ToDoData(0,mTitle,parsePriority(mPriority),mDescription)
+            val newData = ToDoData(0,mTitle,sharedViewModel.parsePriority(mPriority),mDescription)
             mToDoViewModel.insertData(newData)
             Toast.makeText(requireContext(),"Successfully Added", Toast.LENGTH_SHORT).show()
 
@@ -57,18 +57,4 @@ class addFragment : Fragment() {
 
     }
 
-    private fun verifyDataFromUser(title:String, description:String): Boolean{
-        return if(TextUtils.isEmpty(title) || TextUtils.isEmpty(description)){
-            false
-        }else !(title.isEmpty() || description.isEmpty())
-    }
-
-    private fun parsePriority(priority: String): Priority{
-        return when(priority){
-            "High Priority" -> {Priority.HIGH}
-            "Medium Priority" -> {Priority.MEDIUM}
-            "Low Priority" -> {Priority.LOW}
-            else -> Priority.LOW
-        }
-    }
 }
