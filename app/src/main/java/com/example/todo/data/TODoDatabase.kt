@@ -5,12 +5,13 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import com.example.todo.data.model.ToDoData
 
 @Database(entities = [ToDoData::class], version = 1,exportSchema = false)
 @TypeConverters(Converter::class)
-abstract  class TODoDatabase: RoomDatabase() {
+abstract class TODoDatabase: RoomDatabase() {
 
-    abstract fun toDoDao(): ToDoData
+    abstract fun toDoDao(): ToDoDao
 
     companion object{
 
@@ -37,5 +38,22 @@ abstract  class TODoDatabase: RoomDatabase() {
         }
 
     }
+
+//    companion object {
+//        @Volatile
+//        private var INSTANCE: TODoDatabase? = null
+//
+//        fun getDatabase(context: Context): TODoDatabase =
+//            INSTANCE ?: synchronized(this) {
+//                INSTANCE
+//                    ?: buildDatabase(context).also { INSTANCE = it }
+//            }
+//
+//        private fun buildDatabase(context: Context) =
+//            Room.databaseBuilder(
+//                context.applicationContext,
+//                TODoDatabase::class.java, "todo_database"
+//            ).build()
+//    }
 
 }
